@@ -32,7 +32,44 @@ function signup() {
     users.push(newUser);
     localStorage.setItem('users', JSON.stringify(users));
 
-    // 6. 注册成功提示（后续可替换为跳转到登录页）
+    // 6. 注册成功提示
     alert('注册成功！');
-    // window.location.href = 'login.html'; // 等登录页完成后再取消注释
+}
+
+// 登录函数
+function login() {
+    // 1. 获取表单输入
+    let email = document.getElementById('loginEmail').value.trim();
+    let pwd = document.getElementById('loginPwd').value;
+
+    // 2. 基础校验
+    if (!email || !pwd) {
+        alert('邮箱和密码不能为空！');
+        return;
+    }
+
+    // 3. 读取本地用户列表
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    // 查找是否存在该邮箱的用户
+    let targetUser = users.find(user => user.email === email);
+
+    if (!targetUser) {
+        alert('该邮箱未注册，请先注册！');
+        return;
+    }
+
+    // 4. 校验密码是否正确
+    let isPwdValid = bcrypt.compareSync(pwd, targetUser.password);
+    if (!isPwdValid) {
+        alert('密码错误！');
+        return;
+    }
+
+    // 5. 登录成功，保存当前用户信息（用于后续页面判断登录状态）
+    localStorage.setItem('currentUser', JSON.stringify({
+        name: targetUser.name,
+        email: targetUser.email
+    }));
+
+    alert('登录成功！');
 }
