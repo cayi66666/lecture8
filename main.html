@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+</head>
+<body>
+    <!-- 1. 个人问候语 -->
+    <h2 id="greeting"></h2>
+
+    <!-- 2. 当前登录用户的LocalStorage数据 -->
+    <h3>当前登录用户数据 (LocalStorage.currentUser):</h3>
+    <pre id="currentUserInfo"></pre>
+
+    <!-- 3. 所有注册用户的LocalStorage数据 -->
+    <h3>所有注册用户数据 (LocalStorage.users):</h3>
+    <pre id="allUsersInfo"></pre>
+
+    <button onclick="logout()">退出登录</button>
+
+    <script>
+        // 页面加载时自动执行
+        window.onload = function() {
+            // 获取当前登录用户
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            // 1. 显示个人问候语
+            if (currentUser) {
+                document.getElementById('greeting').innerText = `欢迎回来，${currentUser.name}！`;
+            } else {
+                document.getElementById('greeting').innerText = `请先登录！`;
+            }
+
+            // 2. 显示当前登录用户的LocalStorage数据
+            document.getElementById('currentUserInfo').innerText = 
+                JSON.stringify(currentUser, null, 2);
+
+            // 3. 显示所有注册用户的LocalStorage数据
+            let allUsers = JSON.parse(localStorage.getItem('users')) || [];
+            document.getElementById('allUsersInfo').innerText = 
+                JSON.stringify(allUsers, null, 2);
+        }
+
+        // 登出函数
+        function logout() {
+            localStorage.removeItem('currentUser');
+            alert('已退出登录！');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
